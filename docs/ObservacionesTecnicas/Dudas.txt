@@ -1,0 +1,19 @@
+
+
+* Profundicar funcionalmente el control de pacientes: 
+ - Como se consultas de pacientes?
+ - En donde se recomienda realizar la busquedas de pacientes?
+ - Donde inicia el levantamiento de información para un paciente en particular?
+ - etc.
+ - Detallar cualquier otro comportamiento.
+
+* Acerca de los formularios configurables.
+ - Profundizar acerca de este tópico.
+ - Agregar y quitar preguntas?
+ - Se mantienen las mismas preguntas configuradas para todos los pacientes?
+ - Un paciente puede tener preguntas distintas a otro?
+ - Que configuración se mantiene al realizar cambios en el formulario?
+ - Cantidad minima / máxima de preguntas?
+ - Detallar cualquier otro comportamiento.
+
+* Detallar longitud ó capacidad de los atributos en todo el sistema. (textos, nombres, etc)
