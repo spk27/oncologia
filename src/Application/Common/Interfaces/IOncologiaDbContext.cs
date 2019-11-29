@@ -8,6 +8,7 @@ namespace Oncologia.Application.Common.Interfaces
     public interface IOncologiaDbContext
     {
         DbSet<Paciente> Pacientes { get; set; }
+        DbSet<Auditoria> Auditorias { get; set; }
 
         Task<int> SaveChangesAsync(CancellationToken cancellationToken);
     }

@@ -27,7 +27,7 @@ namespace Oncologia.Application.Pacientes.Commands.DeletePaciente
 
                 if (entity == null)
                 {
-                    throw new NotFoundException(nameof(Paciente), request.Id);
+                    throw new NotFoundException(nameof(Paciente), request.Id, _context, cancellationToken);
                 }
 
                 _context.Pacientes.Remove(entity);

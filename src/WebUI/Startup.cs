@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.SpaServices.AngularCli;
 using Microsoft.Extensions.Configuration;
@@ -10,6 +11,7 @@ using Oncologia.Application;
 using Oncologia.Application.Common.Interfaces;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Http;
+using Oncologia.WebUI.Common;
 
 namespace WebUI
 {
@@ -31,6 +33,9 @@ namespace WebUI
             services.AddPersistence(Configuration);
             services.AddApplication();
 
+            services.AddHealthChecks()
+                .AddDbContextCheck<OncologiaDbContext>();
+
             services.AddHttpContextAccessor();
 
             services
@@ -40,6 +45,11 @@ namespace WebUI
 
             services.AddRazorPages();
 
+            services.Configure<ApiBehaviorOptions>(options =>
+            {
+                options.SuppressModelStateInvalidFilter = true;
+            });
+            
             // In production, the Angular files will be served from this directory
             services.AddSpaStaticFiles(configuration =>
             {
@@ -48,7 +58,7 @@ namespace WebUI
 
             services.AddOpenApiDocument(configure =>
             {
-                configure.Title = "Northwind Traders API";
+                configure.Title = "Oncología API";
             });
 
             _services = services;
@@ -69,6 +79,8 @@ namespace WebUI
                 app.UseHsts();
             }
 
+            app.UseCustomExceptionHandler();
+            app.UseHealthChecks("/health");
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseSpaStaticFiles();
@@ -101,8 +113,8 @@ namespace WebUI
 
                 if (Environment.IsDevelopment())
                 {
-                    spa.UseProxyToSpaDevelopmentServer("http://localhost:4200");
-                    // spa.UseAngularCliServer(npmScript: "start");
+                    // spa.UseProxyToSpaDevelopmentServer("http://localhost:4200");
+                    spa.UseAngularCliServer(npmScript: "start");
                 }
             });
         }

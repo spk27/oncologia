@@ -1,6 +1,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
+using Oncologia.Application.Common.Exceptions;
 using Oncologia.Application.Common.Interfaces;
 using Oncologia.Domain.Entities;
 
@@ -32,6 +33,10 @@ namespace Oncologia.Application.Pacientes.Commands.UpsertPaciente
                 if (request.Id.HasValue)
                 {
                     entity = await _context.Pacientes.FindAsync(request.Id.Value);
+
+                    if (entity == null) {
+                        throw new NotFoundException(nameof(Paciente), request.Id, _context, cancellationToken);
+                    }
                 }
                 else
                 {

@@ -35,7 +35,7 @@ namespace WebUI
                 catch (Exception ex)
                 {
                     var logger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();
-                    logger.LogError(ex, "An error occurred while migrating or initializing the database.");
+                    logger.LogError(ex, "Un error ha ocurrido al inicializar la base de datos.");
                 }
             }
 
