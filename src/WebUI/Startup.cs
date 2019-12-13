@@ -81,7 +81,7 @@ namespace WebUI
 
             app.UseCustomExceptionHandler();
             app.UseHealthChecks("/health");
-            app.UseHttpsRedirection();
+            // app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseSpaStaticFiles();
 

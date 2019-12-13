@@ -20,7 +20,7 @@ namespace Oncologia.Application.Common.Behaviours
             _context = context;
         }
 
-        public Task Process(TRequest request, CancellationToken cancellationToken)
+        public async Task Process(TRequest request, CancellationToken cancellationToken)
         {
             var name = typeof(TRequest).Name;
 
@@ -34,9 +34,9 @@ namespace Oncologia.Application.Common.Behaviours
                 Mensaje = $"Se ha llamado a la accion con los siguientes parámetros: \n {request.ToString()}"
             });
             
-            _context.SaveChangesAsync(cancellationToken);
+            await _context.SaveChangesAsync(cancellationToken);
 
-            return Task.CompletedTask;
+            return;
         }
     }
 }

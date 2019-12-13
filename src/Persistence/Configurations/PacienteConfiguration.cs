@@ -29,7 +29,7 @@ namespace Oncologia.Persistence.Configurations
                 .IsRequired()
                 .HasMaxLength(15);
 
-            builder.Property(p => p.TipoCedula).HasColumnType("char(2)");
+            builder.Property(p => p.TipoCedula).HasColumnType("char(2)");   
         }
     }
 }

@@ -9,6 +9,7 @@ namespace Oncologia.Application.Common.Interfaces
     {
         DbSet<Paciente> Pacientes { get; set; }
         DbSet<Auditoria> Auditorias { get; set; }
+        DbSet<FormField> FormFields { get; set; }
 
         Task<int> SaveChangesAsync(CancellationToken cancellationToken);
     }

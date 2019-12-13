@@ -14,6 +14,80 @@ import { HttpClient, HttpHeaders, HttpResponse, HttpResponseBase } from '@angula
 
 export const API_BASE_URL = new InjectionToken<string>('API_BASE_URL');
 
+export interface IFormsClient {
+    get(formName: string | null): Observable<FormListVm>;
+}
+
+@Injectable()
+export class FormsClient implements IFormsClient {
+    private http: HttpClient;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+        this.http = http;
+        this.baseUrl = baseUrl ? baseUrl : "";
+    }
+
+    get(formName: string | null): Observable<FormListVm> {
+        let url_ = this.baseUrl + "/api/Forms/Get/{formName}";
+        if (formName === undefined || formName === null)
+            throw new Error("The parameter 'formName' must be defined.");
+        url_ = url_.replace("{formName}", encodeURIComponent("" + formName)); 
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGet(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGet(<any>response_);
+                } catch (e) {
+                    return <Observable<FormListVm>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<FormListVm>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGet(response: HttpResponseBase): Observable<FormListVm> {
+        const status = response.status;
+        const responseBlob = 
+            response instanceof HttpResponse ? response.body : 
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }};
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = FormListVm.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status === 404) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result404: any = null;
+            let resultData404 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result404 = ProblemDetails.fromJS(resultData404);
+            return throwException("A server side error occurred.", status, _responseText, _headers, result404);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<FormListVm>(<any>null);
+    }
+}
+
 export interface IPacientesClient {
     getAll(): Observable<PacientesListVm>;
     get(id: number): Observable<PacienteDetailVm>;
@@ -243,6 +317,230 @@ export class PacientesClient implements IPacientesClient {
     }
 }
 
+export class FormListVm implements IFormListVm {
+    formulario?: FormDetailVm[] | undefined;
+    count?: number;
+
+    constructor(data?: IFormListVm) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(data?: any) {
+        if (data) {
+            if (Array.isArray(data["formulario"])) {
+                this.formulario = [] as any;
+                for (let item of data["formulario"])
+                    this.formulario!.push(FormDetailVm.fromJS(item));
+            }
+            this.count = data["count"];
+        }
+    }
+
+    static fromJS(data: any): FormListVm {
+        data = typeof data === 'object' ? data : {};
+        let result = new FormListVm();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.formulario)) {
+            data["formulario"] = [];
+            for (let item of this.formulario)
+                data["formulario"].push(item.toJSON());
+        }
+        data["count"] = this.count;
+        return data; 
+    }
+}
+
+export interface IFormListVm {
+    formulario?: FormDetailVm[] | undefined;
+    count?: number;
+}
+
+export class FormDetailVm implements IFormDetailVm {
+    keyField?: string | undefined;
+    valueField?: string | undefined;
+    label?: string | undefined;
+    order?: number | undefined;
+    columnsSize?: number | undefined;
+    controlType?: string | undefined;
+    validations?: ValidationVm[] | undefined;
+
+    constructor(data?: IFormDetailVm) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(data?: any) {
+        if (data) {
+            this.keyField = data["keyField"];
+            this.valueField = data["valueField"];
+            this.label = data["label"];
+            this.order = data["order"];
+            this.columnsSize = data["columnsSize"];
+            this.controlType = data["controlType"];
+            if (Array.isArray(data["validations"])) {
+                this.validations = [] as any;
+                for (let item of data["validations"])
+                    this.validations!.push(ValidationVm.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): FormDetailVm {
+        data = typeof data === 'object' ? data : {};
+        let result = new FormDetailVm();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["keyField"] = this.keyField;
+        data["valueField"] = this.valueField;
+        data["label"] = this.label;
+        data["order"] = this.order;
+        data["columnsSize"] = this.columnsSize;
+        data["controlType"] = this.controlType;
+        if (Array.isArray(this.validations)) {
+            data["validations"] = [];
+            for (let item of this.validations)
+                data["validations"].push(item.toJSON());
+        }
+        return data; 
+    }
+}
+
+export interface IFormDetailVm {
+    keyField?: string | undefined;
+    valueField?: string | undefined;
+    label?: string | undefined;
+    order?: number | undefined;
+    columnsSize?: number | undefined;
+    controlType?: string | undefined;
+    validations?: ValidationVm[] | undefined;
+}
+
+export class ValidationVm implements IValidationVm {
+    type?: string | undefined;
+    value?: string | undefined;
+
+    constructor(data?: IValidationVm) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(data?: any) {
+        if (data) {
+            this.type = data["type"];
+            this.value = data["value"];
+        }
+    }
+
+    static fromJS(data: any): ValidationVm {
+        data = typeof data === 'object' ? data : {};
+        let result = new ValidationVm();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["type"] = this.type;
+        data["value"] = this.value;
+        return data; 
+    }
+}
+
+export interface IValidationVm {
+    type?: string | undefined;
+    value?: string | undefined;
+}
+
+export class ProblemDetails implements IProblemDetails {
+    type?: string | undefined;
+    title?: string | undefined;
+    status?: number | undefined;
+    detail?: string | undefined;
+    instance?: string | undefined;
+    extensions?: { [key: string]: any; } | undefined;
+
+    constructor(data?: IProblemDetails) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(data?: any) {
+        if (data) {
+            this.type = data["type"];
+            this.title = data["title"];
+            this.status = data["status"];
+            this.detail = data["detail"];
+            this.instance = data["instance"];
+            if (data["extensions"]) {
+                this.extensions = {} as any;
+                for (let key in data["extensions"]) {
+                    if (data["extensions"].hasOwnProperty(key))
+                        this.extensions![key] = data["extensions"][key];
+                }
+            }
+        }
+    }
+
+    static fromJS(data: any): ProblemDetails {
+        data = typeof data === 'object' ? data : {};
+        let result = new ProblemDetails();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["type"] = this.type;
+        data["title"] = this.title;
+        data["status"] = this.status;
+        data["detail"] = this.detail;
+        data["instance"] = this.instance;
+        if (this.extensions) {
+            data["extensions"] = {};
+            for (let key in this.extensions) {
+                if (this.extensions.hasOwnProperty(key))
+                    data["extensions"][key] = this.extensions[key];
+            }
+        }
+        return data; 
+    }
+}
+
+export interface IProblemDetails {
+    type?: string | undefined;
+    title?: string | undefined;
+    status?: number | undefined;
+    detail?: string | undefined;
+    instance?: string | undefined;
+    extensions?: { [key: string]: any; } | undefined;
+}
+
 export class PacientesListVm implements IPacientesListVm {
     pacientes?: PacienteDto[] | undefined;
     count?: number;
@@ -389,74 +687,6 @@ export interface IPacienteDetailVm {
     segundoApellido?: string | undefined;
     cedula?: string | undefined;
     tipoCedula?: string;
-}
-
-export class ProblemDetails implements IProblemDetails {
-    type?: string | undefined;
-    title?: string | undefined;
-    status?: number | undefined;
-    detail?: string | undefined;
-    instance?: string | undefined;
-    extensions?: { [key: string]: any; } | undefined;
-
-    constructor(data?: IProblemDetails) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(data?: any) {
-        if (data) {
-            this.type = data["type"];
-            this.title = data["title"];
-            this.status = data["status"];
-            this.detail = data["detail"];
-            this.instance = data["instance"];
-            if (data["extensions"]) {
-                this.extensions = {} as any;
-                for (let key in data["extensions"]) {
-                    if (data["extensions"].hasOwnProperty(key))
-                        this.extensions![key] = data["extensions"][key];
-                }
-            }
-        }
-    }
-
-    static fromJS(data: any): ProblemDetails {
-        data = typeof data === 'object' ? data : {};
-        let result = new ProblemDetails();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["type"] = this.type;
-        data["title"] = this.title;
-        data["status"] = this.status;
-        data["detail"] = this.detail;
-        data["instance"] = this.instance;
-        if (this.extensions) {
-            data["extensions"] = {};
-            for (let key in this.extensions) {
-                if (this.extensions.hasOwnProperty(key))
-                    data["extensions"][key] = this.extensions[key];
-            }
-        }
-        return data; 
-    }
-}
-
-export interface IProblemDetails {
-    type?: string | undefined;
-    title?: string | undefined;
-    status?: number | undefined;
-    detail?: string | undefined;
-    instance?: string | undefined;
-    extensions?: { [key: string]: any; } | undefined;
 }
 
 export class UpsertPacienteCommand implements IUpsertPacienteCommand {

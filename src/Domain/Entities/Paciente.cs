@@ -3,6 +3,7 @@ using System.Collections.Generic;
 
 namespace Oncologia.Domain.Entities {
   public class Paciente {
+
     public int PacienteId { get; set; }
     public string PrimerNombre { get; set; }
     public string SegundoNombre { get; set; }

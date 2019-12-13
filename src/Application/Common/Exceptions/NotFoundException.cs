@@ -12,5 +12,9 @@ namespace Oncologia.Application.Common.Exceptions
         {
             ExceptionAudit.Send("", $"Entidad '{name}' ({key}) no fue encontrada.", context, cancellationToken);
         }
+        
+        public NotFoundException(string name, object key)
+            : base($"Entidad '{name}' ({key}) no fue encontrada.")
+        { }
     }
 }

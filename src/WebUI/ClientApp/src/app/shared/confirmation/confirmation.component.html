@@ -1,0 +1,27 @@
+<mat-card>
+    <mat-card-header>
+      <mat-card-title>
+        Aviso
+      </mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <div *ngIf="data.type === 'info'">
+        <span class="alert">{{data.msj}}</span>
+      </div>
+      <div *ngIf="data.type === 'error'">
+        <span class="alert alert-danger">{{data.msj}}</span>
+      </div>
+      <div *ngIf="data.type === 'warning'">
+        <span class="alert alert-warning">{{data.msj}}</span>
+      </div>
+      <div *ngIf="data.type === 'success'">
+        <span class="alert">{{data.msj}}</span>
+      </div>
+    </mat-card-content>
+    <mat-card-actions>
+      <div class="row justify-content-end">
+        <button mat-button (click)="onNoClick()">Cerrar</button>
+        <button *ngIf="data.type === 'info'" mat-button (click)="confirm()">Confirmar</button>
+      </div>
+    </mat-card-actions>
+  </mat-card>
