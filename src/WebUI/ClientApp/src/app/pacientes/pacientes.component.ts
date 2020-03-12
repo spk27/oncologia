@@ -1,22 +1,24 @@
 import { Component, OnInit } from '@angular/core';
-import { PacientesClient, PacientesListVm } from '../oncologia-api';
-import { PacientesService } from './pacientes.service';
 
 @Component({
   selector: 'app-pacientes',
   templateUrl: './pacientes.component.html',
-  styleUrls: ['./pacientes.component.css'],
-  providers: [PacientesService]
+  styleUrls: ['./pacientes.component.css']
 })
 export class PacientesComponent implements OnInit {
+  
+  msj: String = "";
 
-  private _client: PacientesClient;
-  private pacientesVm: PacientesListVm = new PacientesListVm();
-  public pacientesColumns: string[] = ['nombreCorto'];
-  questions: any[];
+  constructor() {
+  }
 
-  constructor(service: PacientesService) {
-    // this.questions = service.upsertPacienteQuestion();
+  asignarAviso(msj: String) {
+    console.log(msj);
+    this.msj = msj;
+  }
+
+  clearAviso() {
+    this.msj = "";
   }
 
   ngOnInit() {

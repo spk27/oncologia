@@ -8,15 +8,18 @@ export interface Message {
 
 @Component({
   selector: 'app-confirmation',
-  templateUrl: './confirmation.component.html'
+  templateUrl: './confirmation.component.html',
+  styleUrls: ['./confirmation.component.css']
 })
 
 export class ConfirmationComponent implements OnInit {
-  public error: any;
+  public errors: any;
   public onConfirm = new EventEmitter();
 
   constructor(public dialogRef: MatDialogRef<ConfirmationComponent>, 
-    @Inject(MAT_DIALOG_DATA) public data: Message) { }
+    @Inject(MAT_DIALOG_DATA) public data: Message) {
+      if(data.type === 'error') this.errors = data.msj;
+     }
 
   confirm() {
     this.onConfirm.emit();
@@ -28,6 +31,24 @@ export class ConfirmationComponent implements OnInit {
   }
 
   ngOnInit() {
+  }
+
+  get manageError() {
+    if(Array.isArray(this.errors)) {
+      let errores = [];
+       Object.keys(this.errors).map(e => {
+        return "hola";
+      });
+      return ['das','asdas'];
+    } else return this.errors;
+  }
+
+  get isArray() {
+    return typeof this.errors === 'object' || false;
+  }
+
+  get errorKeys() {
+    return Object.keys(this.errors);
   }
 
 }

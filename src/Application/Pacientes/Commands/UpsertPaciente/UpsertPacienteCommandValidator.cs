@@ -14,6 +14,7 @@ namespace Oncologia.Application.Pacientes.Commands.UpsertPaciente
             RuleFor(x => x.PrimerApellido).MaximumLength(50).NotEmpty();
             RuleFor(x => x.SegundoApellido).MaximumLength(50);
             RuleFor(x => x.Cedula).MaximumLength(15).NotEmpty();
+            RuleFor(x => x.TipoCedula).MaximumLength(5).NotEmpty();
         }
     }
 }

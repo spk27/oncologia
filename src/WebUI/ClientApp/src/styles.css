@@ -1,6 +1,14 @@
 /* You can add global styles to this file, and also import other style files */
 
 /* Provide sufficient contrast against white background */
+@import '@angular/material/prebuilt-themes/deeppurple-amber.css';
+
+.spinner mat-dialog-container {
+  box-shadow: none;
+  background: rgba(0, 0, 0, 0.0);
+  pointer-events: none;
+}
+
 a {
   color: #0366d6;
 }

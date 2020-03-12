@@ -14,8 +14,6 @@ namespace Oncologia.Persistence
         public DbSet<Paciente> Pacientes { get; set; }
 
         public DbSet<Auditoria> Auditorias { get; set; }
-        
-        public DbSet<FormField> FormFields { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

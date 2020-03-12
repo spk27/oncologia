@@ -1,0 +1,26 @@
+
+
+<table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+
+    <ng-container matColumnDef="id">
+      <th mat-header-cell *matHeaderCellDef> No. </th>
+      <td mat-cell *matCellDef="let element"> {{element?.id}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="nombreCorto">
+      <th mat-header-cell *matHeaderCellDef> Nombre </th>
+      <td mat-cell *matCellDef="let element"> {{element?.nombreCorto}} </td>
+    </ng-container>
+    
+    <ng-container matColumnDef="options">
+      <th mat-header-cell *matHeaderCellDef> Opciones </th>
+      <td mat-cell *matCellDef="let element; let i = index">
+        <button (click)="deletePaciente(element.id, i)" mat-mini-fab color="primary">
+            <mat-icon aria-hidden="false" aria-label="Eliminar Paciente">delete</mat-icon>
+        </button>
+        </td>
+    </ng-container>
+  
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  </table>

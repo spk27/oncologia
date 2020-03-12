@@ -6,48 +6,6 @@
     "version": "1.0.0"
   },
   "paths": {
-    "/api/Forms/Get/{formName}": {
-      "get": {
-        "tags": [
-          "Forms"
-        ],
-        "operationId": "Forms_Get",
-        "parameters": [
-          {
-            "name": "formName",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "nullable": true
-            },
-            "x-position": 1
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/FormListVm"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     "/api/Pacientes/GetAll": {
       "get": {
         "tags": [
@@ -130,14 +88,22 @@
         },
         "responses": {
           "200": {
-            "description": ""
-          },
-          "default": {
             "description": "",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
+                  "type": "integer",
+                  "format": "int32"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
                 }
               }
             }
@@ -183,108 +149,6 @@
   },
   "components": {
     "schemas": {
-      "FormListVm": {
-        "type": "object",
-        "additionalProperties": false,
-        "properties": {
-          "formulario": {
-            "type": "array",
-            "nullable": true,
-            "items": {
-              "$ref": "#/components/schemas/FormDetailVm"
-            }
-          },
-          "count": {
-            "type": "integer",
-            "format": "int32"
-          }
-        }
-      },
-      "FormDetailVm": {
-        "type": "object",
-        "additionalProperties": false,
-        "properties": {
-          "keyField": {
-            "type": "string",
-            "nullable": true
-          },
-          "valueField": {
-            "type": "string",
-            "nullable": true
-          },
-          "label": {
-            "type": "string",
-            "nullable": true
-          },
-          "order": {
-            "type": "integer",
-            "format": "int32",
-            "nullable": true
-          },
-          "columnsSize": {
-            "type": "integer",
-            "format": "int32",
-            "nullable": true
-          },
-          "controlType": {
-            "type": "string",
-            "nullable": true
-          },
-          "validations": {
-            "type": "array",
-            "nullable": true,
-            "items": {
-              "$ref": "#/components/schemas/ValidationVm"
-            }
-          }
-        }
-      },
-      "ValidationVm": {
-        "type": "object",
-        "additionalProperties": false,
-        "properties": {
-          "type": {
-            "type": "string",
-            "nullable": true
-          },
-          "value": {
-            "type": "string",
-            "nullable": true
-          }
-        }
-      },
-      "ProblemDetails": {
-        "type": "object",
-        "additionalProperties": false,
-        "properties": {
-          "type": {
-            "type": "string",
-            "nullable": true
-          },
-          "title": {
-            "type": "string",
-            "nullable": true
-          },
-          "status": {
-            "type": "integer",
-            "format": "int32",
-            "nullable": true
-          },
-          "detail": {
-            "type": "string",
-            "nullable": true
-          },
-          "instance": {
-            "type": "string",
-            "nullable": true
-          },
-          "extensions": {
-            "type": "object",
-            "nullable": true,
-            "additionalProperties": {}
-          }
-        }
-      },
       "PacientesListVm": {
         "type": "object",
         "additionalProperties": false,
@@ -349,6 +213,38 @@
           }
         }
       },
+      "ProblemDetails": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "type": {
+            "type": "string",
+            "nullable": true
+          },
+          "title": {
+            "type": "string",
+            "nullable": true
+          },
+          "status": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "detail": {
+            "type": "string",
+            "nullable": true
+          },
+          "instance": {
+            "type": "string",
+            "nullable": true
+          },
+          "extensions": {
+            "type": "object",
+            "nullable": true,
+            "additionalProperties": {}
+          }
+        }
+      },
       "UpsertPacienteCommand": {
         "type": "object",
         "additionalProperties": false,
@@ -379,7 +275,8 @@
             "nullable": true
           },
           "tipoCedula": {
-            "type": "string"
+            "type": "string",
+            "nullable": true
           }
         }
       }

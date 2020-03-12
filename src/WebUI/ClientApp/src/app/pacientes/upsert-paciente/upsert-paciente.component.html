@@ -1,4 +1,81 @@
-<div>
-    <h2>Crear Paciente</h2>
-    <app-dynamic-form [questions]="questions"></app-dynamic-form>
-</div>
+
+<mat-card [hidden]="submitted" class="mat-elevation-z8">
+    <mat-card-header>
+        <mat-card-title>Crear Paciente</mat-card-title>
+    </mat-card-header>
+    <mat-card-content >
+        <form #createForm="ngForm">
+            <div class="row">
+                <div class="col-6">
+                    <mat-form-field appearance="outline">
+                        <mat-label>Primer Nombre</mat-label>
+                        <input [(ngModel)]="paciente.primerNombre" required #primerNombre="ngModel" id="primerNombre" name="primerNombre" matInput placeholder="Primer Nombre">
+                        <mat-error *ngIf="primerNombre.invalid">Name is required</mat-error>
+                        <!-- <mat-hint><div [hidden]="primerNombre.valid || primerNombre.pristine" class="alert-danger"> Name is required</div></mat-hint> -->
+                    </mat-form-field>
+                </div>
+                <div class="col-6">
+                    <mat-form-field appearance="outline">
+                        <mat-label>Segundo Nombre</mat-label>
+                        <input [(ngModel)]="paciente.segundoNombre" id="segundoNombre" name="segundoNombre" matInput placeholder="Segundo Nombre">
+                    </mat-form-field>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-6">
+                    <mat-form-field appearance="outline">
+                        <mat-label>Primer Apellido</mat-label>
+                        <input [(ngModel)]="paciente.primerApellido" id="primerApellido" name="primerApellido" matInput placeholder="Primer Apellido">
+                    </mat-form-field>
+                </div>
+                <div class="col-6">
+                    <mat-form-field appearance="outline">
+                        <mat-label>Segundo Apellido</mat-label>
+                        <input [(ngModel)]="paciente.segundoApellido" id="segundoApellido" name="segundoApellido" matInput placeholder="Segundo Apellido">
+                    </mat-form-field>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-6">
+                    <mat-form-field appearance="outline">
+                        <mat-label>Cédula</mat-label>
+                        <input [(ngModel)]="paciente.cedula" id="cedula" name="cedula" matInput placeholder="Cédula">
+                    </mat-form-field>
+                </div>
+                <div class="col-6">
+                    <mat-form-field appearance="outline">
+                        <mat-label>Tipo de Cédula</mat-label>
+                        <input [(ngModel)]="paciente.tipoCedula" id="tipoCedula" name="tipoCedula" matInput placeholder="Tipo de Cédula">
+                    </mat-form-field>
+                </div>
+            </div>
+        </form>
+    </mat-card-content>
+    <mat-card-actions>
+        <button type="button" class="btn btn-default" (click)="nuevoPaciente(); createForm.reset()">Nuevo Paciente</button>
+        <button type="submit" class="btn btn-success" (click)="creandoNuevoPaciente()" [disabled]="!createForm.form.valid" mat-button>Enviar</button>
+    </mat-card-actions>
+</mat-card>
+<mat-card [hidden]="!submitted">
+    <mat-card-header>
+        <mat-card-title>Paciente</mat-card-title>
+    </mat-card-header>
+    <mat-card-content >
+        <div class="row">
+            <div class="col-xs-3">Nombre</div>
+            <div class="col-xs-9">{{ paciente.primerNombre }} {{ paciente.segundoNombre }}</div>
+        </div>
+            <div class="row">
+            <div class="col-xs-3">Apellido</div>
+            <div class="col-xs-9">{{ paciente.primerApellido }} {{ paciente.segundoApellido }} </div>
+        </div>
+            <div class="row">
+            <div class="col-xs-3">Cédula</div>
+            <div class="col-xs-9">{{ paciente.tipoCedula }} {{ paciente.cedula }}</div>
+        </div>
+    </mat-card-content>
+    <mat-card-actions>
+        <button type="button" class="btn btn-default" (click)="submitted=false; nuevoPaciente(); createForm.reset()">Nuevo Paciente</button>
+        <button type="button" class="btn btn-default" (click)="submitted=false;">Crear Similar</button>
+    </mat-card-actions>
+</mat-card>

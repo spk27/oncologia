@@ -29,8 +29,9 @@ namespace Oncologia.WebUI.Controllers
 
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesDefaultResponseType]
-        public async Task<IActionResult> Upsert(UpsertPacienteCommand command) {
+        [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
+        //[ProducesDefaultResponseType]
+        public async Task<ActionResult<int>> Upsert(UpsertPacienteCommand command) {
             var id = await Mediator.Send(command);
 
             return Ok(id);

@@ -1,14 +1,24 @@
 
-<div class="container-fluid">
+<div class="container">
     <div class="row">
-        <div class="col-4 mat-elevation-z8">
-            <app-upsert-paciente></app-upsert-paciente>
+        <div class="col-6">
+            {{msj}}
         </div>
-        <div class="col-4">
-            
+        <div>
+            <span>Elemento en lista: </span>
+            <h1>{{ list.pacientesVM?.count }}</h1>
         </div>
-        <div class="col-4">
-            3
+    </div>
+    <mat-divider></mat-divider>
+    <div class="row">
+        <div class="col-12">
+            <app-list-pacientes #list></app-list-pacientes>
+        </div>
+    </div>
+    <mat-divider></mat-divider>
+    <div class="row">
+        <div class="col-6">
+            <app-upsert-paciente (fromCreation)="asignarAviso($event)"></app-upsert-paciente>
         </div>
     </div>
 </div>

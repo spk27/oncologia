@@ -11,6 +11,7 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatIconModule } from '@angular/material/icon';
 import { MatListModule } from '@angular/material/list';
 import { NgModule } from '@angular/core';
+import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 
 const modules = [
     MatButtonModule,
@@ -24,7 +25,8 @@ const modules = [
     MatPaginatorModule,
     MatToolbarModule,
     MatIconModule,
-    MatListModule
+    MatListModule,
+    MatProgressSpinnerModule
   ];
   
   @NgModule({

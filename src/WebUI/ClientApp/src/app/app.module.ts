@@ -12,9 +12,13 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MaterialModule } from './angularMaterialModule';
 import { PacientesComponent } from './pacientes/pacientes.component';
 import { ConfirmationComponent } from './shared/confirmation/confirmation.component';
-import { DynamicFormComponent } from './shared/dynamic-forms/dynamic-form.component';
-import { DynamicFormQuestionComponent } from './shared/dynamic-forms/dynamic-form-question.component';
 import { UpsertPacienteComponent } from './pacientes/upsert-paciente/upsert-paciente.component';
+import { LoadingSpinnerComponent } from './shared/loading-spinner/loading-spinner.component';
+import { LoadingSpinnerInterceptor } from './shared/loading-spinner/loading-spinner.interceptor';
+import { PacientesService } from './pacientes/pacientes.service';
+import { PacientesClient } from './oncologia-api';
+import { ConfirmationService } from './shared/confirmation/confirmation.service';
+import { ListPacientesComponent } from './pacientes/list-pacientes/list-pacientes.component';
 
 @NgModule({
   declarations: [
@@ -22,13 +26,14 @@ import { UpsertPacienteComponent } from './pacientes/upsert-paciente/upsert-paci
     NavMenuComponent,
     HomeComponent,
     ConfirmationComponent,
-    DynamicFormComponent,
-    DynamicFormQuestionComponent,
     PacientesComponent,
-    UpsertPacienteComponent
+    UpsertPacienteComponent,
+    LoadingSpinnerComponent,
+    ListPacientesComponent
   ],
   entryComponents: [
-    ConfirmationComponent
+    ConfirmationComponent,
+    LoadingSpinnerComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
@@ -42,7 +47,12 @@ import { UpsertPacienteComponent } from './pacientes/upsert-paciente/upsert-paci
     ]),
     BrowserAnimationsModule
   ],
-  providers: [],
+  providers: [
+    PacientesService
+    ,PacientesClient
+    ,ConfirmationService
+    ,{ provide: HTTP_INTERCEPTORS, useClass: LoadingSpinnerInterceptor, multi: true }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
