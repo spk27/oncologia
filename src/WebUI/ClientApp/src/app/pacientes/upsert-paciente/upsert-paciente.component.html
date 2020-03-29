@@ -53,7 +53,7 @@
     </mat-card-content>
     <mat-card-actions>
         <button type="button" class="btn btn-default" (click)="nuevoPaciente(); createForm.reset()">Nuevo Paciente</button>
-        <button type="submit" class="btn btn-success" (click)="creandoNuevoPaciente()" [disabled]="!createForm.form.valid" mat-button>Enviar</button>
+        <button type="submit" class="btn btn-success enviarNuevoPaciente" (click)="creandoNuevoPaciente()" [disabled]="!createForm.form.valid" mat-button>Enviar</button>
     </mat-card-actions>
 </mat-card>
 <mat-card [hidden]="!submitted">

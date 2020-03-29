@@ -1,8 +1,13 @@
 import { Component, OnInit, Output } from '@angular/core';
 import { PacientesService } from '../pacientes.service';
-import { PacientesListVm, PacienteDto } from 'src/app/oncologia-api';
+import { 
+  // PacientesListVm
+  PacienteDto } from 'src/app/oncologia-api';
 import { MatTableDataSource } from '@angular/material/table';
-import { error } from 'util';
+import { faIdCardAlt } from '@fortawesome/free-solid-svg-icons';
+// import { ActivatedRoute } from '@angular/router';
+import { switchMap } from 'rxjs/operators';
+import { Observable, observable } from 'rxjs';
 
 @Component({
   selector: 'app-list-pacientes',
@@ -10,33 +15,53 @@ import { error } from 'util';
   styleUrls: ['./list-pacientes.component.css']
 })
 export class ListPacientesComponent implements OnInit {
-  
+  icons = {
+    faIdCardAlt: faIdCardAlt
+  }
   displayedColumns: string[] = ['id', 'nombreCorto', 'options'];
-  private pacientesVM: PacientesListVm = new PacientesListVm();
+  public pacientes$: Observable<PacienteDto[]>;
 
-  dataSource = new MatTableDataSource();
+  selectedId: number;
+
+  constructor(
+    private service: PacientesService,
+    //private route: ActivatedRoute
+    ) { }
   
-  constructor(private service: PacientesService) { }
-  
-  ngOnInit() {
+  ngOnInit() {    
     this.getAllPacientes();
-    this.addPacientSubscription();
-    
+    this.addPacientSubscription();    
   }
 
   getAllPacientes() {
+    /* este metodo para rutas activas
+    this.pacientes$ = this.route.paramMap.pipe(
+      switchMap(params => {
+       this.selectedId = parseInt(params.get('id'));
+       return this.service.getAllPacientes();
+      })
+    );
+
+    this.pacientes$.subscribe(list => {
+      this.pacientesVM = list;
+      this.setPacientesListDataSource(list.pacientes);
+    });
+    */
+
+    /* observable simple
     this.service.getAllPacientes().subscribe(list => {
       this.pacientesVM = list;
       this.setPacientesListDataSource(list.pacientes);
     });
+    */
+
+    this.updatePacientesObservable();
   }
 
   deletePaciente(id: number, index: number) {
     this.service.deletePaciente(id).then(r => {
       if(!r.error) {
-        this.pacientesVM.pacientes.splice(index, 1);
-        this.pacientesVM.count--;
-        this.setPacientesListDataSource(this.pacientesVM.pacientes);
+        this.updatePacientesObservable();
         this.service.sendConfirmation(`El paciente ha sido borrado`);
       }
     })
@@ -44,16 +69,12 @@ export class ListPacientesComponent implements OnInit {
 
   addPacientSubscription() {
     this.service.pacienteCreadoData.subscribe(paciente => {
-      if(paciente) {
-        this.pacientesVM.pacientes.push(paciente);
-        this.pacientesVM.count++;
-        this.setPacientesListDataSource(this.pacientesVM.pacientes);
-      }
+      this.updatePacientesObservable();
     })
   }
 
-  setPacientesListDataSource(data: PacienteDto[]) {
-    this.dataSource = new MatTableDataSource(data);
+  updatePacientesObservable() {
+    this.pacientes$ = this.service.getAllPacientes();
   }
 
 }

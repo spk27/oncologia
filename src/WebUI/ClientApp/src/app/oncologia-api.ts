@@ -15,7 +15,7 @@ import { HttpClient, HttpHeaders, HttpResponse, HttpResponseBase } from '@angula
 export const API_BASE_URL = new InjectionToken<string>('API_BASE_URL');
 
 export interface IPacientesClient {
-    getAll(): Observable<PacientesListVm>;
+    getAll(): Observable<PacienteDto[]>;
     get(id: number): Observable<PacienteDetailVm>;
     upsert(command: UpsertPacienteCommand): Observable<number>;
     delete(id: number): Observable<void>;
@@ -32,7 +32,7 @@ export class PacientesClient implements IPacientesClient {
         this.baseUrl = baseUrl ? baseUrl : "";
     }
 
-    getAll(): Observable<PacientesListVm> {
+    getAll(): Observable<PacienteDto[]> {
         let url_ = this.baseUrl + "/api/Pacientes/GetAll";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -51,14 +51,14 @@ export class PacientesClient implements IPacientesClient {
                 try {
                     return this.processGetAll(<any>response_);
                 } catch (e) {
-                    return <Observable<PacientesListVm>><any>_observableThrow(e);
+                    return <Observable<PacienteDto[]>><any>_observableThrow(e);
                 }
             } else
-                return <Observable<PacientesListVm>><any>_observableThrow(response_);
+                return <Observable<PacienteDto[]>><any>_observableThrow(response_);
         }));
     }
 
-    protected processGetAll(response: HttpResponseBase): Observable<PacientesListVm> {
+    protected processGetAll(response: HttpResponseBase): Observable<PacienteDto[]> {
         const status = response.status;
         const responseBlob = 
             response instanceof HttpResponse ? response.body : 
@@ -69,7 +69,11 @@ export class PacientesClient implements IPacientesClient {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = PacientesListVm.fromJS(resultData200);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200!.push(PacienteDto.fromJS(item));
+            }
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -77,7 +81,7 @@ export class PacientesClient implements IPacientesClient {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf<PacientesListVm>(<any>null);
+        return _observableOf<PacienteDto[]>(<any>null);
     }
 
     get(id: number): Observable<PacienteDetailVm> {
@@ -252,54 +256,6 @@ export class PacientesClient implements IPacientesClient {
     }
 }
 
-export class PacientesListVm implements IPacientesListVm {
-    pacientes?: PacienteDto[] | undefined;
-    count?: number;
-
-    constructor(data?: IPacientesListVm) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(data?: any) {
-        if (data) {
-            if (Array.isArray(data["pacientes"])) {
-                this.pacientes = [] as any;
-                for (let item of data["pacientes"])
-                    this.pacientes!.push(PacienteDto.fromJS(item));
-            }
-            this.count = data["count"];
-        }
-    }
-
-    static fromJS(data: any): PacientesListVm {
-        data = typeof data === 'object' ? data : {};
-        let result = new PacientesListVm();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        if (Array.isArray(this.pacientes)) {
-            data["pacientes"] = [];
-            for (let item of this.pacientes)
-                data["pacientes"].push(item.toJSON());
-        }
-        data["count"] = this.count;
-        return data; 
-    }
-}
-
-export interface IPacientesListVm {
-    pacientes?: PacienteDto[] | undefined;
-    count?: number;
-}
-
 export class PacienteDto implements IPacienteDto {
     id?: number;
     nombreCorto?: string | undefined;
@@ -347,7 +303,7 @@ export class PacienteDetailVm implements IPacienteDetailVm {
     primerApellido?: string | undefined;
     segundoApellido?: string | undefined;
     cedula?: string | undefined;
-    tipoCedula?: string;
+    tipoCedula?: string | undefined;
 
     constructor(data?: IPacienteDetailVm) {
         if (data) {
@@ -397,7 +353,7 @@ export interface IPacienteDetailVm {
     primerApellido?: string | undefined;
     segundoApellido?: string | undefined;
     cedula?: string | undefined;
-    tipoCedula?: string;
+    tipoCedula?: string | undefined;
 }
 
 export class ProblemDetails implements IProblemDetails {

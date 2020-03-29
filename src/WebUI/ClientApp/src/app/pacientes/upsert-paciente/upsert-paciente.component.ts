@@ -11,7 +11,7 @@ export class UpsertPacienteComponent implements OnInit {
   
   @Output() fromCreation = new EventEmitter<string>();
   // createForm: FormGroup;
-  private paciente: UpsertPacienteCommand = new UpsertPacienteCommand();
+  public paciente: UpsertPacienteCommand = new UpsertPacienteCommand();
   public submitted: boolean = false;
 
   constructor(private service: PacientesService) {

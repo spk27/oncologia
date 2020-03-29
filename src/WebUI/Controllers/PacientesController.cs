@@ -6,16 +6,17 @@ using Oncologia.Application.Pacientes.Queries.GetPacientesList;
 using Oncologia.Application.Pacientes.Queries.GetPacienteDetail;
 using Oncologia.Application.Pacientes.Commands.UpsertPaciente;
 using Oncologia.Application.Pacientes.Commands.DeletePaciente;
+using System.Collections.Generic;
 
 namespace Oncologia.WebUI.Controllers
 {
     public class PacientesController : BaseController
     {
         [HttpGet]
-        public async Task<ActionResult<PacientesListVm>> GetAll() {
+        public async Task<ActionResult<IList<PacienteDto>>> GetAll() {
             var vm = await Mediator.Send(new GetPacientesListQuery());
 
-            return Ok(vm);
+            return Ok(vm.Pacientes);
         }
 
         [HttpGet("{id}")]

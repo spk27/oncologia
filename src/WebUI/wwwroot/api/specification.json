@@ -18,7 +18,10 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/PacientesListVm"
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/PacienteDto"
+                  }
                 }
               }
             }
@@ -149,23 +152,6 @@
   },
   "components": {
     "schemas": {
-      "PacientesListVm": {
-        "type": "object",
-        "additionalProperties": false,
-        "properties": {
-          "pacientes": {
-            "type": "array",
-            "nullable": true,
-            "items": {
-              "$ref": "#/components/schemas/PacienteDto"
-            }
-          },
-          "count": {
-            "type": "integer",
-            "format": "int32"
-          }
-        }
-      },
       "PacienteDto": {
         "type": "object",
         "additionalProperties": false,
@@ -209,7 +195,8 @@
             "nullable": true
           },
           "tipoCedula": {
-            "type": "string"
+            "type": "string",
+            "nullable": true
           }
         }
       },

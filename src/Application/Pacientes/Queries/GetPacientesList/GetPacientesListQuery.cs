@@ -30,7 +30,7 @@ namespace Oncologia.Application.Pacientes.Queries.GetPacientesList
                 var vm = new PacientesListVm
                 {
                     Pacientes = Pacientes,
-                    Count = Pacientes.Count
+                    // Count = Pacientes.Count
                 };
 
                 return vm;

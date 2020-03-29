@@ -6,6 +6,6 @@ namespace Oncologia.Application.Pacientes.Queries.GetPacientesList
     {
         public IList<PacienteDto> Pacientes { get; set; }
 
-        public int Count { get; set; }
+        // public int Count { get; set; }
     }
 }

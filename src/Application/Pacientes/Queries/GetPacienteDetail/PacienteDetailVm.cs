@@ -10,7 +10,7 @@ namespace Oncologia.Application.Pacientes.Queries.GetPacienteDetail {
         public string PrimerApellido { get; set; }
         public string SegundoApellido { get; set; }
         public string Cedula { get; set; }
-        public char TipoCedula { get; set; }
+        public string TipoCedula { get; set; }
 
         public void Mapping(Profile profile)
         {

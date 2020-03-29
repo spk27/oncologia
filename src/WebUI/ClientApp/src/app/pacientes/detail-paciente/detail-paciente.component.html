@@ -1,0 +1,44 @@
+<div class="container">
+    <div class="row justify-content-end">
+        <mat-button-toggle (click)="goToPacientes(paciente)" value="bold">
+            <fa-icon [icon]="icons.faLongArrowAltLeft"></fa-icon> Volver
+        </mat-button-toggle>
+    </div>
+    <mat-divider></mat-divider>
+    <div class="row">
+            <mat-list class="mat-elevation-z8">
+                <mat-list-item>
+                    <fa-icon [icon]="icons.faPersonBooth"></fa-icon>
+                  <h3 matLine>{{paciente?.id}}</h3>
+                  <p matLine>
+                    <!-- <span> {{paciente?.id}} </span> -->
+                    <span class="demo-2">Identificador</span>
+                  </p>
+                </mat-list-item>
+                <mat-divider></mat-divider>
+                <mat-list-item>
+                    <fa-icon [icon]="icons.faSignature"></fa-icon>
+                  <h3 matLine>{{paciente?.primerNombre}} {{paciente?.segundoNombre}}</h3>
+                  <p matLine>
+                    <span class="demo-2"> Nombres</span>
+                  </p>
+                </mat-list-item>
+                <mat-divider></mat-divider>
+                <mat-list-item>
+                    <fa-icon [icon]="icons.faSignature"></fa-icon>
+                  <h3 matLine>{{paciente?.primerApellido}} {{paciente?.segundoApellido}}</h3>
+                  <p matLine>
+                    <span class="demo-2">Apellidos</span>
+                  </p>
+                </mat-list-item>
+                <mat-divider></mat-divider>
+                <mat-list-item>
+                  <fa-icon [icon]="icons.faIdCard"></fa-icon>
+                  <h3 matLine>{{paciente?.tipoCedula}} {{paciente?.cedula}}</h3>
+                  <p matLine>
+                    <span class="demo-2">Cédula</span>
+                  </p>
+                </mat-list-item>
+            </mat-list>
+    </div>
+</div>

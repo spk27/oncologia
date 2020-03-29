@@ -10,7 +10,7 @@ export class PacientesService {
     pacienteCreado: PacienteDto;
     //public error: any;
 
-    constructor(client: PacientesClient, private confirmationService: ConfirmationService) {
+    constructor(private client: PacientesClient, private confirmationService: ConfirmationService) {
         this._client = client;
         this.pacienteCreadoData = new BehaviorSubject(this.pacienteCreado);
     }
@@ -19,6 +19,7 @@ export class PacientesService {
         return this._client.upsert(paciente).toPromise()
         .then(id => {
             this.pacienteCreadoExitoso(id, paciente);
+            this.getAllPacientes();
             this.confirmationService.confirmCreation(`Paciente ${paciente.primerNombre} creado`);
             return {error: false, id}
         })
@@ -49,6 +50,10 @@ export class PacientesService {
 
     public getAllPacientes() {
         return this._client.getAll();
+    }
+
+    public getPaciente(id: number) {
+        return this._client.get(id);
     }
 
     public sendConfirmation(msj: String) {
