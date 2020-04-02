@@ -12,6 +12,7 @@ using Oncologia.Application.Common.Interfaces;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Http;
 using Oncologia.WebUI.Common;
+using Oncologia.Infrastructure;
 
 namespace WebUI
 {
@@ -30,6 +31,7 @@ namespace WebUI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddInfrastructure(Configuration, Environment);
             services.AddPersistence(Configuration);
             services.AddApplication();
 

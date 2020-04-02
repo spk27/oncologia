@@ -20,10 +20,12 @@ namespace Oncologia.Application.Pacientes.Commands.UpsertPaciente
         public class UpsertPacienteCommandHandler : IRequestHandler<UpsertPacienteCommand, int>
         {
             private readonly IOncologiaDbContext _context;
+            private readonly IMediator _mediator;
 
-            public UpsertPacienteCommandHandler(IOncologiaDbContext context)
+            public UpsertPacienteCommandHandler(IOncologiaDbContext context, IMediator mediator)
             {
                 _context = context;
+                _mediator = mediator;
             }
 
             public async Task<int> Handle(UpsertPacienteCommand request, CancellationToken cancellationToken)
@@ -53,6 +55,13 @@ namespace Oncologia.Application.Pacientes.Commands.UpsertPaciente
                 entity.TipoCedula = request.TipoCedula;
 
                 await _context.SaveChangesAsync(cancellationToken);
+
+                await _mediator.Publish(new UpsertPacienteNotification { 
+                    PacienteId = entity.PacienteId
+                    ,Nombre = entity.PrimerNombre
+                    ,Accion = request.Id.HasValue ? "Edición" : "Creación"
+                }
+                , cancellationToken);
 
                 return entity.PacienteId;
             }
