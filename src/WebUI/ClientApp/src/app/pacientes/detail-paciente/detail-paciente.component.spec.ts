@@ -7,7 +7,7 @@ import { RouterModule, ActivatedRoute, Router } from '@angular/router';
 import { PacientesService } from '../pacientes.service';
 import { PacientesClient, PacienteDetailVm, API_BASE_URL, PacienteDto } from 'src/app/oncologia-api';
 import { HttpClient, HttpHandler } from '@angular/common/http';
-import { ActivatedRouteStub } from 'src/testing/activated-route-stub';
+import { ActivatedRouteStub } from 'testing/activated-route-stub';
 // import { InjectorInstance } from 'src/app/app.module';
 import { HttpClientModule } from "@angular/common/http";
 

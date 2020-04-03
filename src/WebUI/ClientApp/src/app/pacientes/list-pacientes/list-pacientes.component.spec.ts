@@ -9,11 +9,11 @@ import { PacientesClient, API_BASE_URL, PacienteDto, UpsertPacienteCommand } fro
 import { HttpClientModule } from '@angular/common/http';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { Observable, BehaviorSubject } from 'rxjs';
-import { ActivatedRouteStub } from 'src/testing/activated-route-stub';
+import { ActivatedRouteStub } from 'testing/activated-route-stub';
 import { resolve } from 'dns';
-import { click } from 'src/testing';
+import { click } from 'testing';
 import { By } from '@angular/platform-browser';
-import { RouterLinkDirectiveStub } from 'src/testing/router-link-directive-stub';
+import { RouterLinkDirectiveStub } from 'testing/router-link-directive-stub';
 
 let component: ListPacientesComponent;
 let fixture: ComponentFixture<ListPacientesComponent>;

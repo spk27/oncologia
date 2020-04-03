@@ -9,7 +9,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { By } from '@angular/platform-browser';
 import { of } from 'rxjs';
-import { click } from 'src/testing';
+import { click } from 'testing';
 
 let newPaciente: UpsertPacienteCommand =
   {"id":1000,"primerNombre":"Carlos", "segundoNombre": "Alfredo", "primerApellido":"Pedroza", "segundoApellido": "Loya", "cedula": "32423", "tipoCedula": "CC", "init":null, "toJSON":null};
